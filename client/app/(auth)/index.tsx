@@ -45,6 +45,13 @@ export default function AuthScreen() {
               InstaChat
             </Text>
           </View>
+          {/* hero text */}
+          <Text style={styles.heading}>
+            {mode === "login"? "Welcome Back": "Create Account"}
+          </Text>
+          <Text style={styles.subheading}>
+            {mode === "login" ? "Sign in to continue chatting" : "Fill in your details to get started"}
+          </Text>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
