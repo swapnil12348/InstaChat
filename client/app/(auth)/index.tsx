@@ -52,6 +52,18 @@ export default function AuthScreen() {
           <Text style={styles.subheading}>
             {mode === "login" ? "Sign in to continue chatting" : "Fill in your details to get started"}
           </Text>
+
+          {/* form */}
+          <View style={styles.form}>
+            {mode === "register" && (
+              <>
+              <View style={styles.field}>
+                <Text style={styles.fieldLabel}>Full Name</Text>
+              </View>
+              </>
+            )}
+
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
