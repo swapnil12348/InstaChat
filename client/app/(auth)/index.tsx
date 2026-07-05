@@ -1,4 +1,4 @@
-import { View, Text, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,6 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { Colors } from '@/constants/Colors';
 import { SvgXml } from 'react-native-svg';
 import { TextInput } from 'react-native-gesture-handler';
+import {Ionicons} from "@expo/vector-icons"
 
 type Mode = "login" | "register"
 
@@ -17,8 +18,8 @@ export default function AuthScreen() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [verificationCode, setVerificationCode] = useState("")
-  const [loading, setLoading] = useState("")
-  const [verifying, setVerifying] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [verifying, setVerifying] = useState(false)
 
   const router = useRouter();
   const svgMarkup=`<svg width="54" height="70" viewBox="0 0 54 70" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -117,8 +118,22 @@ export default function AuthScreen() {
               <TouchableOpacity onPress={()=> setMode(mode === "login" ? "register" : "login")}>
                 <Text style={styles.toggleLink}>{mode === 'login' ? "Sign Up" : "Sign In"}</Text>
               </TouchableOpacity>
-
             </View>
+
+            {/* Submit */}
+            <TouchableOpacity disabled={loading} activeOpacity={0.88} style={styles.btnWrapper}>
+              <LinearGradient colors={[Colors.primary, Colors.primaryContainer]}>
+                {loading ? (
+                  <ActivityIndicator color={Colors.onPrimary} size={"small"}/>
+                ):(
+                  <>
+                  <Text style={styles.btnText}>{mode === 'login' ? "Sign In" : "Create Account"}</Text>
+                  <Ionicons name='arrow-forward' size={18} color={Colors.onPrimary}/>
+                  </>
+                )}
+              </LinearGradient>
+
+            </TouchableOpacity>
 
           </View>
         </ScrollView>
