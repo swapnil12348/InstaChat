@@ -85,6 +85,30 @@ export default function AuthScreen() {
               </>
             )}
 
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>Email</Text>
+              <TextInput
+              style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+              placeholder='you@example.com'
+              placeholderTextColor={Colors.outlineVariant}
+              keyboardType="email-address"
+              autoCapitalize='none'/>
+            </View>
+
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>Password</Text>
+              <TextInput
+              style={styles.input}
+              value={password}
+              onChangeText={setPassword}
+              placeholder='*********'
+              placeholderTextColor={Colors.outlineVariant}
+              secureTextEntry/>
+
+            </View>
+
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
