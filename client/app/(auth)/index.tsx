@@ -6,6 +6,7 @@ import { styles } from '@/assets/styles/AuthScreen.styles';
 import { LinearGradient } from 'expo-linear-gradient'
 import { Colors } from '@/constants/Colors';
 import { SvgXml } from 'react-native-svg';
+import { TextInput } from 'react-native-gesture-handler';
 
 type Mode = "login" | "register"
 
@@ -59,6 +60,13 @@ export default function AuthScreen() {
               <>
               <View style={styles.field}>
                 <Text style={styles.fieldLabel}>Full Name</Text>
+                <TextInput
+                style={styles.input}
+                value={name}
+                onChangeText={setName}
+                placeholder='Your Name'
+                placeholderTextColor={Colors.outlineVariant}
+                autoCapitalize='words'/>
               </View>
               </>
             )}
