@@ -12,7 +12,7 @@ import {Ionicons} from "@expo/vector-icons"
 type Mode = "login" | "register"
 
 export default function AuthScreen() {
-  const [mode, setMode] = useState<Mode>("register")
+  const [mode, setMode] = useState<Mode>("login")
   const [name, setName] = useState("")
   const [handle, setHandle] = useState("")
   const [email, setEmail] = useState("")
@@ -22,12 +22,95 @@ export default function AuthScreen() {
   const [verifying, setVerifying] = useState(false)
 
   const router = useRouter();
+
+  const handleSubmit = async () => {
+    setLoading(true)
+    setTimeout(()=>{
+      setLoading(false)
+      setVerifying(true)
+    },1500)
+    
+  }
+
+
   const svgMarkup=`<svg width="54" height="70" viewBox="0 0 54 70" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M24.386 8.817c4.972-4.868 12.948-4.785 17.816.186 4.869 4.971 4.785 12.948-.186 17.816q-.506.494-.987.867L23.508 9.794q.372-.481.878-.977M11.97 42.611c-4.941 4.9-4.974 12.877-.075 17.817 4.9 4.94 12.877 4.974 17.817.074q.502-.5.88-.975L12.96 41.747a10 10 0 0 0-.99.864" fill="#fff"/>
   <rect y="22.652" width="21.312" height="55.056" rx="10.656" transform="rotate(-45 0 22.652)" fill="#fff"/>
 </svg>
 `
+if(verifying){
+  return(
+    <SafeAreaView style={styles.safe}>
+      <KeyboardAvoidingView style={styles.kav} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
 
+
+          {/* logo */}
+          <View style={styles.logoRow}>
+            <LinearGradient colors={[Colors.primary, Colors.primaryContainer]} style={styles.logoBox}>
+              <SvgXml xml={svgMarkup} width="50%" height="50%"/>
+
+
+            </LinearGradient>
+            <Text style={styles.appName}>
+              InstaChat
+            </Text>
+          </View>
+
+          {/* hero text */}
+          <Text style={styles.heading}>
+            Verify Email
+          </Text>
+          <Text style={styles.subheading}>
+            We have sent a 6-digit verification code to {email}
+          </Text>
+
+          {/* form */}
+          <View style={styles.form}>
+            
+
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>Verification Code</Text>
+              <TextInput
+              style={styles.input}
+              value={verificationCode}
+              onChangeText={setVerificationCode}
+              placeholder='Enter 6-digit code'
+              placeholderTextColor={Colors.outlineVariant}
+              keyboardType="number-pad"
+              autoCapitalize='none'/>
+            </View>
+
+            <View>
+              
+            </View>
+
+
+            {/* Submit */}
+            <TouchableOpacity onPress={handleSubmit} disabled={loading} activeOpacity={0.88} style={styles.btnWrapper}>
+              <LinearGradient colors={[Colors.primary, Colors.primaryContainer]}
+              start={{x:0, y:0}}
+              end={{x:1, y:1}}
+              style={styles.btn}>
+                {loading ? (
+                  <ActivityIndicator color={Colors.onPrimary} size={"small"}/>
+                ):(
+                  <>
+                  <Text style={styles.btnText}>{mode === 'login' ? "Sign In" : "Create Account"}</Text>
+                  <Ionicons name='arrow-forward' size={18} color={Colors.onPrimary}/>
+                  </>
+                )}
+              </LinearGradient>
+
+            </TouchableOpacity>
+
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+
+  )
+}
 
 
   return (
@@ -121,8 +204,11 @@ export default function AuthScreen() {
             </View>
 
             {/* Submit */}
-            <TouchableOpacity disabled={loading} activeOpacity={0.88} style={styles.btnWrapper}>
-              <LinearGradient colors={[Colors.primary, Colors.primaryContainer]}>
+            <TouchableOpacity onPress={handleSubmit} disabled={loading} activeOpacity={0.88} style={styles.btnWrapper}>
+              <LinearGradient colors={[Colors.primary, Colors.primaryContainer]}
+              start={{x:0, y:0}}
+              end={{x:1, y:1}}
+              style={styles.btn}>
                 {loading ? (
                   <ActivityIndicator color={Colors.onPrimary} size={"small"}/>
                 ):(
