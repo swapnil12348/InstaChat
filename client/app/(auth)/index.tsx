@@ -11,7 +11,7 @@ import { TextInput } from 'react-native-gesture-handler';
 type Mode = "login" | "register"
 
 export default function AuthScreen() {
-  const [mode, setMode] = useState<Mode>("login")
+  const [mode, setMode] = useState<Mode>("register")
   const [name, setName] = useState("")
   const [handle, setHandle] = useState("")
   const [email, setEmail] = useState("")
@@ -67,6 +67,20 @@ export default function AuthScreen() {
                 placeholder='Your Name'
                 placeholderTextColor={Colors.outlineVariant}
                 autoCapitalize='words'/>
+              </View>
+              <View style={styles.field}>
+                <Text style={styles.fieldLabel}>Username Handle</Text>
+                <View style={styles.handleRow}>
+                  <Text style={styles.atSign}>@</Text>
+                  <TextInput style={[styles.input, styles.handleInput]}
+                  value={handle}
+                  onChangeText={(v)=>setHandle(v.toLowerCase().replace(/\s/g, ""))}
+                  placeholder='username'
+                  placeholderTextColor={Colors.outlineVariant}
+                  autoCapitalize="none"/>
+
+                </View>
+
               </View>
               </>
             )}
