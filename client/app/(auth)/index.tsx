@@ -1,4 +1,4 @@
-import { View, Text, KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
+import { View, Text, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -106,6 +106,17 @@ export default function AuthScreen() {
               placeholder='*********'
               placeholderTextColor={Colors.outlineVariant}
               secureTextEntry/>
+
+            </View>
+
+            {/* Toggle Mode */}
+            <View style={styles.toggleRow}>
+              <Text style={styles.toggleText}>
+                {mode === "login" ? "Don't have an account?" : "Already have an account"}
+              </Text>
+              <TouchableOpacity onPress={()=> setMode(mode === "login" ? "register" : "login")}>
+                <Text style={styles.toggleLink}>{mode === 'login' ? "Sign Up" : "Sign In"}</Text>
+              </TouchableOpacity>
 
             </View>
 
