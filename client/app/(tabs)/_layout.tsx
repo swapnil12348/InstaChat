@@ -2,6 +2,7 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { Tabs } from 'expo-router';
 import { Colors } from '@/constants/Colors';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function tabs_layout() {
   return (
@@ -23,9 +24,27 @@ export default function tabs_layout() {
         fontWeight: "600",
       }
     }}>
-      <Tabs.Screen name='index'/>
-      <Tabs.Screen name='search'/>
-      <Tabs.Screen name='profile'/>
+      <Tabs.Screen name='index' options={{
+        title: "Messages",
+        tabBarIcon: ({color, focused})=>(
+          <Ionicons name={focused? "chatbubbles" : "chatbubbles-outline"} size={22} color={color}/>
+        )
+
+      }}/>
+
+      <Tabs.Screen name='search' options={{
+        title: "Search",
+        tabBarIcon:({color,focused})=>(
+          <Ionicons name={focused ? "search" : "search-outline"} size={22} color={color}/>
+        )
+      }}/>
+
+      <Tabs.Screen name='profile' options={{
+        title:"Profile",
+        tabBarIcon:({color,focused})=>(
+          <Ionicons name={focused ? "person" : "person-outline"} size={22} color={color}/>
+        )
+      }}/>
     </Tabs>
   )
 }
