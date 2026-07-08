@@ -32,6 +32,14 @@ export default function AuthScreen() {
     
   }
 
+  const handleVerify = async () => {
+    setLoading(true)
+    setTimeout(()=>{
+      setLoading(false)
+      router.replace("/(tabs)")
+    },1500)
+  }
+
 
   const svgMarkup=`<svg width="54" height="70" viewBox="0 0 54 70" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M24.386 8.817c4.972-4.868 12.948-4.785 17.816.186 4.869 4.971 4.785 12.948-.186 17.816q-.506.494-.987.867L23.508 9.794q.372-.481.878-.977M11.97 42.611c-4.941 4.9-4.974 12.877-.075 17.817 4.9 4.94 12.877 4.974 17.817.074q.502-.5.88-.975L12.96 41.747a10 10 0 0 0-.99.864" fill="#fff"/>
@@ -80,14 +88,21 @@ if(verifying){
               keyboardType="number-pad"
               autoCapitalize='none'/>
             </View>
-
-            <View>
+            
+            {/* back to sign up link */}
+            <View style={styles.toggleRow}>
+              <Text style={styles.toggleText}>
+              </Text>
+              <TouchableOpacity onPress={()=>setVerifying(false)}>
+                <Text style={styles.toggleLink}>Go Back</Text>
+              </TouchableOpacity>
+              
               
             </View>
 
 
             {/* Submit */}
-            <TouchableOpacity onPress={handleSubmit} disabled={loading} activeOpacity={0.88} style={styles.btnWrapper}>
+            <TouchableOpacity onPress={handleVerify} disabled={loading} activeOpacity={0.88} style={styles.btnWrapper}>
               <LinearGradient colors={[Colors.primary, Colors.primaryContainer]}
               start={{x:0, y:0}}
               end={{x:1, y:1}}
@@ -96,7 +111,7 @@ if(verifying){
                   <ActivityIndicator color={Colors.onPrimary} size={"small"}/>
                 ):(
                   <>
-                  <Text style={styles.btnText}>{mode === 'login' ? "Sign In" : "Create Account"}</Text>
+                  <Text style={styles.btnText}>Verify Code</Text>
                   <Ionicons name='arrow-forward' size={18} color={Colors.onPrimary}/>
                   </>
                 )}
