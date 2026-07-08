@@ -10,7 +10,7 @@ export default function tabs_layout() {
       tabBarActiveTintColor: Colors.primary,
       tabBarInactiveTintColor: Colors.onSurfaceVariant,
       tabBarStyle:{
-        backgroundColor: Colors.primary,
+        backgroundColor: Colors.surfaceLowest,
         borderTopColor:Colors.surfaceHigh,
         borderTopWidth: 1,
         height: 80,
