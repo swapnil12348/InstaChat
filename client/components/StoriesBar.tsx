@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { styles } from '@/assets/styles/StoriesBar.styles';
 import { UserStory } from '@/types';
@@ -19,7 +19,16 @@ export default function StoriesBar({onViewStory}: StoriesBarProps) {
     const {userStories} = {userStories: dummyStoriesData}
 
     const pickAndUpload = async () => {
-        const {status} = await ImagePic
+        const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+            Alert.alert("Permission needed", "Allow access to your photos to post a story.")
+            return;
+            
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes:["images"]
+        })
         
     }
 
