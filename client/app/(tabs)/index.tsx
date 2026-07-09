@@ -1,10 +1,13 @@
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Conversation, UserStory } from '@/types';
 import { useRouter } from 'expo-router';
 import { dummyConversationData } from '@/assets/assets';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { styles } from '@/assets/styles/MessagesScreen.styles';
+import { Ionicons } from '@expo/vector-icons';
+import { Colors } from '@/constants/Colors';
+import { TextInput } from 'react-native-gesture-handler';
 
 export default function MessagesScreen() {
 
@@ -43,6 +46,16 @@ export default function MessagesScreen() {
       </View>
       
       {/* search */}
+      <View style={styles.searchRow}>
+        <Ionicons name='search' size={16} color={Colors.outlineVariant}/>
+        <TextInput style={styles.searchInput} value={search} onChangeText={setSearch} placeholder='Search Conversations...' placeholderTextColor={Colors.outlineVariant}/>
+        {search.length >0 && (
+          <TouchableOpacity onPress={()=>setSearch("")}>
+            <Ionicons name='close-circle' size={16} color={Colors.outlineVariant}/>
+          </TouchableOpacity>
+        )}
+
+      </View>
 
       {/* stories */}
 
