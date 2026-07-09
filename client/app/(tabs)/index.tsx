@@ -49,7 +49,7 @@ export default function MessagesScreen() {
       <View style={styles.searchRow}>
         <Ionicons name='search' size={16} color={Colors.outlineVariant}/>
         <TextInput style={styles.searchInput} value={search} onChangeText={setSearch} placeholder='Search Conversations...' placeholderTextColor={Colors.outlineVariant}/>
-        {search.length >0 && (
+        {search.length > 0 && (
           <TouchableOpacity onPress={()=>setSearch("")}>
             <Ionicons name='close-circle' size={16} color={Colors.outlineVariant}/>
           </TouchableOpacity>
