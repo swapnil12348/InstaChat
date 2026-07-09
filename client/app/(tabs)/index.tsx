@@ -54,7 +54,6 @@ export default function MessagesScreen() {
             <Ionicons name='close-circle' size={16} color={Colors.outlineVariant}/>
           </TouchableOpacity>
         )}
-
       </View>
 
       {/* stories */}
