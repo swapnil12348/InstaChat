@@ -30,6 +30,16 @@ export default function Avatar({name, size = 40, online, src}: AvatarProps) {
 
             )}
         </View>
+        {online !== undefined && (
+            <View style={[styles.indicator, {
+                width: indicatorSize,
+                height: indicatorSize,
+                borderRadius: indicatorSize / 2,
+                backgroundColor: online ? "#22c55e" : "#abadae",
+                bottom: 0,
+                right: 0,
+            }]}/>
+        )}
     </View>
   )
 }

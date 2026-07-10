@@ -6,6 +6,7 @@ import { dummyStoriesData } from '@/assets/assets';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import * as ImagePicker from 'expo-image-picker'
+import Avatar from './Avatar';
 
 interface StoriesBarProps{
     onViewStory: (us:UserStory)=> void
@@ -75,7 +76,7 @@ export default function StoriesBar({onViewStory}: StoriesBarProps) {
         return (
             <TouchableOpacity style={styles.storyItem} onPress={()=>onViewStory(us)}>
                 <View style={styles.storyRing}>
-                    <Text>A</Text>
+                    <Avatar name={us.user.name} src={us.user.avatar} size={52}/>
 
                 </View>
                 <Text style={styles.label} numberOfLines={1}>
