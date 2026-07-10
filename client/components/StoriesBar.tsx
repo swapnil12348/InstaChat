@@ -38,6 +38,16 @@ export default function StoriesBar({onViewStory}: StoriesBarProps) {
 
         const asset = result.assets[0];
         const formData = new FormData()
+        formData.append("file", {
+            uri: asset.uri,
+            type: asset.mimeType || "image/jpg",
+            name: asset.fileName || "story.jpg"
+        }as any);
+
+        setUploading(true)
+        setTimeout(()=>{
+            setUploading(false)
+        },2000)
         
     }
 
@@ -61,8 +71,20 @@ export default function StoriesBar({onViewStory}: StoriesBarProps) {
             )
             
         }
-    }}>
+        const us = item as UserStory
+        return (
+            <TouchableOpacity style={styles.storyItem} onPress={()=>onViewStory(us)}>
+                <View style={styles.storyRing}>
+                    <Text>A</Text>
 
-    </FlatList>
+                </View>
+                <Text style={styles.label} numberOfLines={1}>
+                    {us.user.name.split(" ")[0]}
+                </Text>
+            </TouchableOpacity>
+        )
+    }}/>
+
+
   )
 }
