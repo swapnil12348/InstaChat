@@ -27,8 +27,17 @@ export default function StoriesBar({onViewStory}: StoriesBarProps) {
         }
 
         const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes:["images"]
+            mediaTypes:["images","videos"],
+            quality: 0.8,
         })
+
+        if (result.canceled || !result.assets[0]) {
+            return
+            
+        }
+
+        const asset = result.assets[0];
+        const formData = new FormData()
         
     }
 
