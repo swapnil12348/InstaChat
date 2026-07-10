@@ -14,19 +14,19 @@ interface AvatarProps{
 
 export default function Avatar({name, size = 40, online, src}: AvatarProps) {
 
-    const colors = PALETTE[name.charCodeAt(0) % PALETTE.length];
+    const color = PALETTE[name.charCodeAt(0) % PALETTE.length];
     const initials = name.split(" ").map((W)=>W[0]).join("").slice(0,2).toUpperCase();
     const indicatorSize = Math.round(size*0.28)
   return (
     <View style={[styles.root, {width: size, height: size}]}>
-        <View>
+        <View style={[styles.circle, {width: size, height:size, borderRadius:size / 2, backgroundColor: src ? "transparent" : color}]}>
             {src?
             (
                 <Image source={{uri:src}} style={{width:size, height:size, borderRadius: size / 2}}/>
             )
             :
             (
-                <Text style={[styles.initials, {}]}>{initials}</Text>
+                <Text style={[styles.initials, { fontSize: size * 0.38}]}>{initials}</Text>
 
             )}
         </View>
