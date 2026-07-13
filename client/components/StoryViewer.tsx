@@ -6,6 +6,9 @@ import Avatar from './Avatar';
 import { Ionicons } from '@expo/vector-icons';
 import {VideoView, useVideoPlayer} from "expo-video"
 
+
+const STORY_DURATION = 5000;
+
 interface Props{
     userStory: UserStory;
     onClose: ()=> void;
@@ -19,6 +22,15 @@ export default function StoryViewer({userStory, onClose} : Props) {
     
     const story = userStory.stories[currentIndex]
     const startProgress = ()=>{
+      progressAnim.setValue(0);
+      animRef.current = Animated.timing(progressAnim,{
+        toValue:1,
+        duration: STORY_DURATION,
+        useNativeDriver: false,
+      });
+      animRef.current.start(({finished})=>{
+        if(finished) goNext();
+      })
 
     }
 
@@ -29,10 +41,21 @@ export default function StoryViewer({userStory, onClose} : Props) {
     },[currentIndex])
 
     const goNext = ()=>{
+      animRef.current?.stop();
+      if (currentIndex < userStory.stories.length - 1) {
+        setCurrentIndex((i)=> i+1)
+      }else{
+        onClose()
+      }
 
     }
 
     const goPrev = ()=>{
+      animRef.current?.stop();
+      if (currentIndex>0) {
+        setCurrentIndex((i)=>i-1)
+        
+      }
 
     }
 

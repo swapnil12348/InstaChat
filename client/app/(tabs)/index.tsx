@@ -63,8 +63,10 @@ export default function MessagesScreen() {
         {selectedStory && <StoryViewer userStory={selectedStory} onClose={()=>setSelectedStory(null)}/>}
 
       {/* divider */}
+      <View style={styles.divider}/>
 
       {/* conversation list */}
+      
 
 
     </SafeAreaView>
