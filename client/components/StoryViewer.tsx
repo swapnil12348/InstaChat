@@ -4,6 +4,7 @@ import { UserStory } from '@/types';
 import { styles } from '@/assets/styles/StoryViewer.styles';
 import Avatar from './Avatar';
 import { Ionicons } from '@expo/vector-icons';
+import {VideoView, useVideoPlayer} from "expo-video"
 
 interface Props{
     userStory: UserStory;
@@ -83,7 +84,7 @@ export default function StoryViewer({userStory, onClose} : Props) {
 
         {/* media */}
         {story.mediaType === "video" ? (
-          <></>
+          <StoryVideoPlayer uri={story.mediaUrl} style={styles.media}/>
 
         ):(
           <Image source={{uri: story.mediaUrl}} style={styles.media} resizeMode='contain'/>
@@ -95,4 +96,13 @@ export default function StoryViewer({userStory, onClose} : Props) {
 
     </Modal>
   )
+}
+
+function StoryVideoPlayer({uri, style}:{uri:string; style: any}){
+  const player = useVideoPlayer({uri}, (p)=>{
+    p.loop=false;
+    p.play()
+  })
+  return <VideoView player={player} style={style}/>
+
 }
