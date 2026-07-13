@@ -1,4 +1,4 @@
-import { View, Text, Animated, Modal, TouchableOpacity } from 'react-native'
+import { View, Text, Animated, Modal, TouchableOpacity, Image } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { UserStory } from '@/types';
 import { styles } from '@/assets/styles/StoryViewer.styles';
@@ -82,6 +82,12 @@ export default function StoryViewer({userStory, onClose} : Props) {
         </View>
 
         {/* media */}
+        {story.mediaType === "video" ? (
+          <></>
+
+        ):(
+          <Image source={{uri: story.mediaUrl}} style={styles.media} resizeMode='contain'/>
+        )}
 
         {/* tap zones */}
 
