@@ -91,6 +91,11 @@ export default function StoryViewer({userStory, onClose} : Props) {
         )}
 
         {/* tap zones */}
+        <View style={styles.tapZones}>
+          <TouchableOpacity style={styles.tapHalf} onPress={goPrev}/>
+          <TouchableOpacity style={styles.tapHalf} onPress={goNext}/>
+
+        </View>
 
       </View>
 
