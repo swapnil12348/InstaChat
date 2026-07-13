@@ -45,6 +45,18 @@ export default function StoryViewer({userStory, onClose} : Props) {
         <View style={styles.progressRow}>
           {userStory.stories.map((_, idx)=>(
             <view key={idx} style={styles.progressTrack}>
+              <Animated.View
+              style={[styles.progressFill,
+                idx < currentIndex
+                ? {width: "100%"}
+                : idx === currentIndex
+                ?{
+                  width: progressAnim.interpolate({
+                    inputRange: [0,1],
+                    outputRange: ["0%", "100%"],
+                  })
+                }:{width: "0%"}
+              ]}/>
 
             </view>
           ))}
