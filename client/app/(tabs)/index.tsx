@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import { TextInput } from 'react-native-gesture-handler';
 import StoriesBar from '@/components/StoriesBar';
+import StoryViewer from '@/components/StoryViewer';
 
 export default function MessagesScreen() {
 
@@ -59,6 +60,7 @@ export default function MessagesScreen() {
 
       {/* stories */}
       <StoriesBar onViewStory={(us)=>setSelectedStory(us)}/>
+        {selectedStory && <StoryViewer userStory={selectedStory} onClose={()=>setSelectedStory(null)}/>}
 
       {/* divider */}
 
