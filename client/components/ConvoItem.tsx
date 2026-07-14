@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Conversation } from '@/types';
 import { styles } from '@/assets/styles/ConvoItem.styles';
+import Avatar from './Avatar';
 
 interface ConvoItemProps{
     convo: Conversation,
@@ -21,7 +22,21 @@ export default function ConvoItem({convo, selected, onPress} :  ConvoItemProps) 
 
 
   return (
-    <TouchableOpacity activeOpacity={0.7} onPress={onPress} style={[styles]}>
+    <TouchableOpacity activeOpacity={0.7} onPress={onPress} style={[styles.row, selected && styles.rowSelected]}>
+      <Avatar name={name} src={avatar} size={48} online={online}/>
+      <View style={styles.info}>
+        <View style={styles.topRow}>
+          <View style={styles.nameCol}>
+            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.handle}>{sub}</Text>
+
+          </View>
+          {convo.updatedAt && <Text style={styles.time}>{convo.updatedAt}</Text>}
+
+        </View>
+        <Text style={styles.lastMsg} numberOfLines={1}>{lastMsg}</Text>
+
+      </View>
 
     </TouchableOpacity>
   )
