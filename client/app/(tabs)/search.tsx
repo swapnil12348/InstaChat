@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import type {User as IUser} from '../../types'
 import { useRouter } from 'expo-router';
 import { dummyUsers } from '@/assets/assets';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { styles } from '@/assets/styles/SearchScreen.styles';
 
 export default function search() {
 
@@ -27,8 +29,8 @@ export default function search() {
 
 
   return (
-    <View>
-      <Text>search</Text>
-    </View>
+    <SafeAreaView style={styles.safe} edges={["top"]}>
+
+    </SafeAreaView>
   )
 }
