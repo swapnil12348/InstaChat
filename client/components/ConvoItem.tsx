@@ -3,6 +3,7 @@ import React from 'react'
 import { Conversation } from '@/types';
 import { styles } from '@/assets/styles/ConvoItem.styles';
 import Avatar from './Avatar';
+import { formatTime } from '@/utils/formatTime';
 
 interface ConvoItemProps{
     convo: Conversation,
@@ -31,7 +32,9 @@ export default function ConvoItem({convo, selected, onPress} :  ConvoItemProps) 
             <Text style={styles.handle}>{sub}</Text>
 
           </View>
-          {convo.updatedAt && <Text style={styles.time}>{convo.updatedAt}</Text>}
+          {convo.updatedAt && <Text style={styles.time}>
+            {formatTime(convo.updatedAt)}
+            </Text>}
 
         </View>
         <Text style={styles.lastMsg} numberOfLines={1}>{lastMsg}</Text>
