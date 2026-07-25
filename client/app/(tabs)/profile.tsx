@@ -172,7 +172,14 @@ export default function profile() {
               <View style={styles.optionIcon}>
                 <Ionicons name="lock-closed-outline" size={20} color={Colors.onSurfaceVariant}/>
               </View>
+              <Text style={styles.optionText}>Privacy & Security</Text>
+              <Ionicons name="chevron-forward" size={16} color={Colors.outlineVariant}/>
+            </TouchableOpacity>
 
+            <TouchableOpacity style={styles.optionRow}>
+              <View style={styles.optionIcon}>
+
+              </View>
             </TouchableOpacity>
 
 
