@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import { dummyUserProfile } from '@/assets/assets';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,6 +7,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import Avatar from '@/components/Avatar';
 import { TextInput } from 'react-native-gesture-handler';
+import { LinearGradient } from 'expo-linear-gradient';
+import { ColorSpace } from 'react-native-reanimated';
+import { Color } from 'react-native/types_generated/Libraries/Animated/AnimatedExports';
 
 export default function profile() {
 
@@ -22,6 +25,14 @@ export default function profile() {
   const displayAvatar = avatarUri || user?.avatar
 
   const pickAvatar = async ()=>{
+
+  }
+
+  const saveProfile = async ()=>{
+
+  }
+
+  const handleLogout = async ()=>{
 
   }
 
@@ -105,18 +116,68 @@ export default function profile() {
               style={[styles.input, styles.bioInput]}
               value={profileBio}
               onChangeText={setProfileBio}
-              placeholder='Tell us about Yourself ...'/> 
+              placeholder='Tell us about Yourself ...'
+              placeholderTextColor={Colors.outlineVariant}
+              multiline
+              numberOfLines={3}/> 
 
             </View>
 
             {/* save button */}
+            <TouchableOpacity onPress={saveProfile} disabled={loading} style={styles.saveWrapper} activeOpacity={0.88}>
+              <LinearGradient 
+              colors={[Colors.primary,  Colors.primaryContainer]}
+              start={{x:0,  y:0}}
+              end={{x:1, y:1}}
+              style={styles.saveBtn}>
+                {loading ? (
+                  <ActivityIndicator color={Colors.onPrimary}/>
+                ):(
+                  <Text style={styles.saveBtnText}>Save Changes</Text>
+                )}
+
+              </LinearGradient>
+            </TouchableOpacity>
 
             {/* cancel button */}
+            <TouchableOpacity  style={styles.cancelBtn}>
+              <Text style={styles.cancelBtnText}>Cancel</Text>
+
+
+            </TouchableOpacity>
 
           </View>
         )}
 
         {/* profile options */}
+        {!editMode && (
+          <View style={styles.optionsSection}>
+            <TouchableOpacity style={styles.optionRow}>
+              <View style={styles.optionIcon}>
+                <Ionicons name="settings-outline" size={20} color={Colors.onSurfaceVariant}/>
+              </View>
+              <Text style={styles.optionText}>Settings</Text>
+              <Ionicons name="chevron-forward" size={16} color={Colors.outlineVariant}/>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.optionRow}>
+              <View style={styles.optionIcon}>
+                <Ionicons name="notifications-outline" size={20} color={Colors.outlineVariant}/>
+              </View>
+              <Text style={styles.optionText}>Notifications</Text>
+              <Ionicons name="chevron-forward" size={16} color={Colors.outlineVariant}/>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.optionRow}>
+              <View style={styles.optionIcon}>
+                <Ionicons name="lock-closed-outline" size={20} color={Colors.onSurfaceVariant}/>
+              </View>
+
+            </TouchableOpacity>
+
+
+          </View>
+        )}
 
         {/* sign out */}
 
