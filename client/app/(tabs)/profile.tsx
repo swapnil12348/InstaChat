@@ -50,7 +50,7 @@ export default function profile() {
               <Avatar name={user?.name || "?"} src={displayAvatar} size={100}/>
               {editMode && (
                 <View style={styles.cameraOverlay}>
-                  <Ionicons name="pencil" size={22} color='#fff'/>
+                  <Ionicons name="camera" size={22} color='#fff'/>
 
                 </View>
               )}
@@ -74,12 +74,40 @@ export default function profile() {
             {/* name */}
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>NAME</Text>
-              <TextInput style={styles.input}/>
+              <TextInput style={styles.input}
+              value={profileName}
+              onChangeText={setProfileName}
+              placeholder='Your name'
+              placeholderTextColor={Colors.outlineVariant}
+              autoCapitalize='words'/>
             </View>
 
             {/* handle */}
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>HANDLE</Text>
+              <View style={styles.handleRow}>
+                <Text style={styles.atSign}>@</Text>
+                <TextInput
+                style={[styles.input, styles.handleInput]}
+                value={profileHandle}
+                onChangeText={(v)=>setProfileHandle(v.toLowerCase().replace(/\s/g, ""))}
+                placeholder='username'
+                placeholderTextColor={Colors.outlineVariant}
+                autoCapitalize='none'/>
+              </View>
+
+            </View>
 
             {/* bio */}
+            <View style={styles.fieldLabel}>
+              <Text style={styles.fieldLabel} >BIO</Text>
+              <TextInput
+              style={[styles.input, styles.bioInput]}
+              value={profileBio}
+              onChangeText={setProfileBio}
+              placeholder='Tell us about Yourself ...'/> 
+
+            </View>
 
             {/* save button */}
 
