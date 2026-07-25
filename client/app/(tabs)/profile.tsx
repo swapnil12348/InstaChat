@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { dummyUserProfile } from '@/assets/assets';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,7 +9,7 @@ import Avatar from '@/components/Avatar';
 import { TextInput } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ColorSpace } from 'react-native-reanimated';
-import { Color } from 'react-native/types_generated/Libraries/Animated/AnimatedExports';
+import * as ImagePicker from 'expo-image-picker'
 
 export default function profile() {
 
@@ -25,14 +25,40 @@ export default function profile() {
   const displayAvatar = avatarUri || user?.avatar
 
   const pickAvatar = async ()=>{
+    const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert("Permission needed", "Allow access to your photos to chnage avatar.")
+      return;
+      
+    }
 
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      quality: 0.8,
+      allowsEditing: true,
+      aspect: [1,1]
+    });
+    if (!result.canceled && result.assets[0]) {
+      setAvatarUri(result.assets[0].uri)
+      
+    }
   }
 
   const saveProfile = async ()=>{
+    setLoading(true)
+    setTimeout(()=>{
+      setEditMode(false)
+      setAvatarUri(null)
+      setLoading(false)
+    },2000)
 
   }
 
   const handleLogout = async ()=>{
+    Alert.alert("Sign Out", "Are you sure you wnat to sign out?", [
+      {text: "Cancel", style:"cancel"},
+      {text: "Sign Out", style:"destructive", onPress: ()=>{}}
+    ])
 
   }
 
@@ -178,8 +204,10 @@ export default function profile() {
 
             <TouchableOpacity style={styles.optionRow}>
               <View style={styles.optionIcon}>
-
+                <Ionicons name="help-circle-outline" size={20} color={Colors.onSurfaceVariant}/>
               </View>
+              <Text style={styles.optionText}>Help & Support</Text>
+              <Ionicons name="chevron-forward" size={16} color={Colors.outlineVariant}/>
             </TouchableOpacity>
 
 
@@ -187,6 +215,14 @@ export default function profile() {
         )}
 
         {/* sign out */}
+
+        <View style={styles.signOutSection}>
+          <TouchableOpacity style={styles.signOutBtn} onPress={handleLogout}>
+            <Ionicons name="log-out-outline" size={18} colors={Colors.error}/>
+            <Text style={styles.signOutText}>Sign Out</Text>
+          </TouchableOpacity>
+
+        </View>
 
       </ScrollView>
 
