@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator, FlatList } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'expo-router';
 import { dummyConversationData, dummyMessages, dummyUserProfile, dummyUsers } from '@/assets/assets';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -29,7 +29,17 @@ export default function ChatScreen() {
   const [loading, setLoading]=useState(false)
   const [mediaUri, setMediaUri]=useState<string | null>(null)
 
+  const flatListRef = useRef<FlatList>(null)
+
   const partner = selectedConversation?.participant
+
+  //scroll to bottom when messages update
+  useEffect(()=>{
+    if (messages.length > 0) {
+      setTimeout(()=>flatListRef.current?.scrollToEnd({animated: true}),100)
+      
+    }
+  },[messages])
 
   const deleteChat = () =>{
     
@@ -81,7 +91,7 @@ export default function ChatScreen() {
             <Ionicons name="call-outline" size={20} color={Colors.onSurfaceVariant}/>
           </TouchableOpacity>
           <TouchableOpacity style={styles.backBtn}>
-            <Ionicons name="videocam-outline" size={28} color={Colors.onSurfaceVariant}/>
+            <Ionicons name="videocam-outline" size={20} color={Colors.onSurfaceVariant}/>
           </TouchableOpacity>
           <TouchableOpacity style={styles.backBtn} onPress={deleteChat}>
             <Ionicons name="trash-outline" size={20} color={Colors.onSurfaceVariant}/>
@@ -90,10 +100,38 @@ export default function ChatScreen() {
       </View>
 
       {/* main */}
+      <KeyboardAvoidingView style={styles.kav} behavior={Platform.OS === 'ios' ? 'padding' : "height"} keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
 
-          {/* messages */}
-          {/* typing indicator */}
-          {/* input bar */}
+        {/* messages */}
+        {loading ? (
+          <ActivityIndicator style={{flex:1}} color={Colors.primary}/>
+        ):(
+          <FlatList data={messages}
+          keyExtractor={(m)=> m._id}
+          contentContainerStyle={styles.messageList}
+          renderItem={({item: msg, index})=>{
+            const isMine = msg.sender === auth.user?._id;
+            const prev = messages[index-1];
+            const showGap = !prev || prev.sender !== msg.sender;
+            return(
+              <View style={showGap && index > 0 ? {marginTop: 10} : {}}>
+                <Text>Message Bubble</Text>
+
+              </View>
+            )
+
+
+          }}
+          onContentSizeChange={()=> flatListRef.current?.scrollToEnd({animated: false})}/>
+        )}
+
+        {/* typing indicator */}
+
+        {/* input bar */}
+
+      </KeyboardAvoidingView>
+
+          
 
     </SafeAreaView>
   )
