@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator, FlatList, Image } from 'react-native'
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator, FlatList, Image, Alert, TextInput } from 'react-native'
 import React, { useEffect, useId, useRef, useState } from 'react'
 import { useRouter } from 'expo-router';
 import { dummyConversationData, dummyMessages, dummyUserProfile, dummyUsers } from '@/assets/assets';
@@ -8,8 +8,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import { formatTime } from '@/utils/formatTime';
 import Avatar from '@/components/Avatar';
-import { ColorSpace } from 'react-native-reanimated';
 import Bubble from '@/components/Bubble';
+
+import * as ImagePicker from "expo-image-picker"
 
 
 export default function ChatScreen() {
@@ -45,6 +46,28 @@ export default function ChatScreen() {
   const deleteChat = () =>{
     
   }
+
+  const pickMedia = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    if (status !== 'granted') {
+      Alert.alert("Permission needed", "Allow photo access to send media. ")
+      return
+    }    
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes:['images','videos'],
+    quality:0.8
+
+  })
+
+  if (!result.canceled && result.assets[0]) {
+    const asset = result.assets[0]
+    setMediaUri(asset.uri)
+  }
+  
+  }
+
+  
 
   // typing entries helpers
 
@@ -167,6 +190,17 @@ export default function ChatScreen() {
 
           <View style={styles.inputRow}>
             <TouchableOpacity style={styles.attachBtn} onPress={()=>setMediaUri(null)}>
+              <TouchableOpacity style={styles.attachBtn} onPress={pickMedia}>
+                <Ionicons name="image-outline" size={22} color={Colors.onSurfaceVariant}/>
+              </TouchableOpacity>
+
+              <TextInput style={styles.textInput}
+              value={text}
+              onChangeText={handleTyping}
+              placeholder="Message..."
+              placeholderTextColor={Colors.outlineVariant}
+              multiline
+              maxLength={2000}/>
 
             </TouchableOpacity>
 
