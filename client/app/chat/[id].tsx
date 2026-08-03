@@ -137,7 +137,20 @@ export default function ChatScreen() {
         )}
 
         {/* typing indicator */}
-        {}
+        {typingEntries.length > 0 && (
+          <View style={styles.typingRow}>
+            {typingEntries.map(([uid])=>{
+              const u = users.find((x)=>x._id === uid) || partner;
+              return (
+                <Text key={uid} style={styles.typingText}>
+                  {u?.name || "Someone"} is typing...
+                </Text>
+              )
+            })}
+
+          </View>
+
+        )}
 
         {/* input bar */}
 
