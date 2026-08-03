@@ -9,6 +9,7 @@ import { Colors } from '@/constants/Colors';
 import { formatTime } from '@/utils/formatTime';
 import Avatar from '@/components/Avatar';
 import { ColorSpace } from 'react-native-reanimated';
+import Bubble from '@/components/Bubble';
 
 
 export default function ChatScreen() {
@@ -107,6 +108,7 @@ export default function ChatScreen() {
           <ActivityIndicator style={{flex:1}} color={Colors.primary}/>
         ):(
           <FlatList data={messages}
+          ref={flatListRef}
           keyExtractor={(m)=> m._id}
           contentContainerStyle={styles.messageList}
           renderItem={({item: msg, index})=>{
@@ -115,7 +117,7 @@ export default function ChatScreen() {
             const showGap = !prev || prev.sender !== msg.sender;
             return(
               <View style={showGap && index > 0 ? {marginTop: 10} : {}}>
-                <Text>Message Bubble</Text>
+                <Bubble msg={msg} isMine={isMine}/>
 
               </View>
             )
