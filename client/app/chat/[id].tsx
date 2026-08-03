@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator, FlatList } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useId, useRef, useState } from 'react'
 import { useRouter } from 'expo-router';
 import { dummyConversationData, dummyMessages, dummyUserProfile, dummyUsers } from '@/assets/assets';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -45,6 +45,15 @@ export default function ChatScreen() {
   const deleteChat = () =>{
     
   }
+
+  // typing entries helpers
+
+  const typingEntries = Object.entries(typingUsers).filter(([uid,isTyping])=>{
+    if (!isTyping || uid === auth.user?._id) {
+      return false
+    }
+    return partner?._id === uid;
+  })
 
   if (!selectedConversation) {
     return (
@@ -128,6 +137,7 @@ export default function ChatScreen() {
         )}
 
         {/* typing indicator */}
+        {}
 
         {/* input bar */}
 

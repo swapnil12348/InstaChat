@@ -6,6 +6,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
 import { styles } from '@/assets/styles/Bubble.styles';
 import { useVideoPlayer, VideoView } from 'expo-video';
+import { formatTime } from '@/utils/formatTime';
+import { Ionicons } from '@expo/vector-icons';
+import { matchGroupName } from 'expo-router/build/matchers';
 
 
 interface BubbleProps {
@@ -58,6 +61,14 @@ function BubbleContent({ msg, isMine }: { msg: Message; isMine: boolean }) {
             )}
 
             {msg.text && <Text style={[styles.msgText, isMine ? styles.msgTextMe : styles.msgTextThem]}>{msg.text}</Text>}
+            <View style={[styles.footer, isMine? styles.footerRight : styles.footerLeft]}>
+                <Text style={[styles.timeText, isMine ? styles.timeMe: styles.timeThem]}>{formatTime(msg.createdAt)}</Text>
+                {isMine && (
+                    <Ionicons name={msg.read ?  "checkmark-done" : "checkmark"} size={12} color={msg.read ? Colors.onPrimary : `${Colors.onPrimary}88`}/>
+                )}
+
+
+            </View>
         </View>
     )
 }
