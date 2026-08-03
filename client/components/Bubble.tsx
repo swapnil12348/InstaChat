@@ -16,7 +16,7 @@ interface BubbleProps{
 
 export default function Bubble({msg, isMine} : BubbleProps) {
 
-    const content = "Message bubble";
+    const content = <BubbleContent msg={msg} isMine={isMine}/>
 
 
   return (
@@ -28,7 +28,7 @@ export default function Bubble({msg, isMine} : BubbleProps) {
             start={{x:0, y:0}}
             end={{x:1, y:1}}
             style={[styles.bubble, styles.bubble]}>
-                <Text>{content}</Text>
+                {content}
 
             </LinearGradient>
         ):(
