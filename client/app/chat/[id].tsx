@@ -64,7 +64,10 @@ export default function ChatScreen() {
     const asset = result.assets[0]
     setMediaUri(asset.uri)
   }
-  
+  }
+
+  const handleTyping = (val:string)=>{
+    setText(val)
   }
 
   
