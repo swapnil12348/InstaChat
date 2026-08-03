@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator, FlatList } from 'react-native'
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator, FlatList, Image } from 'react-native'
 import React, { useEffect, useId, useRef, useState } from 'react'
 import { useRouter } from 'expo-router';
 import { dummyConversationData, dummyMessages, dummyUserProfile, dummyUsers } from '@/assets/assets';
@@ -153,11 +153,27 @@ export default function ChatScreen() {
         )}
 
         {/* input bar */}
+        <View style={styles.inputBar}>
+          {/* media preview */}
+          {mediaUri && (
+            <View  style={styles.mediaPreview}>
+              <Image source={{uri:mediaUri}} style={styles.mediaThumb}/>
+              <TouchableOpacity style={styles.mediaRemove} onPress={()=>setMediaUri(null)}>
+                <Ionicons name="close-circle" size={20} color='#fff'/>
+              </TouchableOpacity>
+              </View>
 
+          )}
+
+          <View style={styles.inputRow}>
+            <TouchableOpacity style={styles.attachBtn} onPress={()=>setMediaUri(null)}>
+
+            </TouchableOpacity>
+
+          </View>
+
+        </View>
       </KeyboardAvoidingView>
-
-          
-
     </SafeAreaView>
   )
 }
