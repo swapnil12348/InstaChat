@@ -13,6 +13,7 @@ connectDB()
 // Middleware
 app.use(cors())
 app.use(express.json());
+app.use(clerkMiddleware())
 
 const port = process.env.PORT || 3000;
 
