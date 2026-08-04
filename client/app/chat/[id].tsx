@@ -11,6 +11,7 @@ import Avatar from '@/components/Avatar';
 import Bubble from '@/components/Bubble';
 
 import * as ImagePicker from "expo-image-picker"
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 export default function ChatScreen() {
@@ -66,9 +67,24 @@ export default function ChatScreen() {
   }
   }
 
+  const send = async ()=>{
+    if (!text.trim() && !mediaUri || !selectedConversation) {
+      return
+    }
+
+    setSending(true)
+    setTimeout(()=>{
+      setSending(false)
+      setText("")
+      setMediaUri(null)
+    }, 500)
+  }
+
   const handleTyping = (val:string)=>{
     setText(val)
   }
+
+  
 
   
 
@@ -80,6 +96,8 @@ export default function ChatScreen() {
     }
     return partner?._id === uid;
   })
+
+  
 
   if (!selectedConversation) {
     return (
@@ -192,7 +210,7 @@ export default function ChatScreen() {
           )}
 
           <View style={styles.inputRow}>
-            <TouchableOpacity style={styles.attachBtn} onPress={()=>setMediaUri(null)}>
+            
               <TouchableOpacity style={styles.attachBtn} onPress={pickMedia}>
                 <Ionicons name="image-outline" size={22} color={Colors.onSurfaceVariant}/>
               </TouchableOpacity>
@@ -205,7 +223,17 @@ export default function ChatScreen() {
               multiline
               maxLength={2000}/>
 
-            </TouchableOpacity>
+              <TouchableOpacity disabled={!text.trim() && !mediaUri || sending} activeOpacity={0.85} onPress={send}>
+                <LinearGradient colors={[Colors.primary, Colors.primaryContainer]} style={[styles.sendBtn, ! text.trim && !mediaUri && styles.sendBtnDisabled]}>
+                  {sending?(
+                    <ActivityIndicator color="fff" size="small"/>
+                  ):(
+                    <Ionicons name="send" size={16} color="fff"/>
+                  )}
+                </LinearGradient>
+              </TouchableOpacity>
+
+           
 
           </View>
 
