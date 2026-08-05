@@ -14,6 +14,7 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
         const {userId} = getAuth(req)
         if (!userId) {
             res.status(401).json({success: false, message: "Unauthenticated"})
+            return
         }
 
         //check if user exists locally on Mongodb
@@ -22,6 +23,10 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
 
         if (!localUser) {
             // lazy sync: fetch details from clerk api
+            const clerkUser = await clerkClient.users.getUser(userId)
+            const email = clerkUser.emailAddresses[0]?.emailAddress;
+            const name = [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join("") || clerkUser.username || "Anonymous";
+            
             
         }
         
