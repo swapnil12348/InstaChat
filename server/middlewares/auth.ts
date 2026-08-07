@@ -43,8 +43,11 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
                     finalHandle=testHandle
                     break;
                 } 
-                
+                counter++
             }
+            localUser = await User.create({
+                
+            })
             
         }
         
