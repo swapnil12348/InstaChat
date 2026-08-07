@@ -26,7 +26,19 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
             const clerkUser = await clerkClient.users.getUser(userId)
             const email = clerkUser.emailAddresses[0]?.emailAddress;
             const name = [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join("") || clerkUser.username || "Anonymous";
+
+            //create callback handle
+
+            const handle = clerkUser.username || clerkUser.emailAddresses[0]?.emailAddress.split("@")[0] || userId;
             
+            //ensure uniqure handle in db by appending random suffix if needed
+
+            let finalHandle = handle.toLowerCase().replace(/[^a-z0-9_]/g, "");
+            let handleExists = await User.findOne({handle: finalHandle})
+            let counter =1;
+            while (handleExists) {
+                
+            }
             
         }
         
