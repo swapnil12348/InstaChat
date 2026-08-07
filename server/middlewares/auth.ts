@@ -37,6 +37,12 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
             let handleExists = await User.findOne({handle: finalHandle})
             let counter =1;
             while (handleExists) {
+                const testHandle =`${finalHandle}${counter}`;
+                handleExists = await User.findOne({handle: testHandle})
+                if (!handleExists) {
+                    finalHandle=testHandle
+                    break;
+                } 
                 
             }
             
