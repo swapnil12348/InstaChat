@@ -46,13 +46,31 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
                 counter++
             }
             localUser = await User.create({
-                
+                _id: userId,
+                name,
+                email: email.toLowerCase(),
+                handle: finalHandle,
+                avatar: clerkUser.imageUrl || "",
+                bio: "Hey there! I am using InstaChat",
+                isOnline: true,
+                lastSeen: new Date(),
+
             })
             
         }
+
+        //attach user info to request for compatibility
+        req.user = {
+            id: localUser._id,
+            name:localUser.name,
+            email:localUser.email
+        }
+
+        next()
         
     } catch (error) {
-        
+        console.error("Auth Middleware Error", error);
+        res.status(401).json({success:false, message: "Invalid or expired token"})
     }
     
 }
