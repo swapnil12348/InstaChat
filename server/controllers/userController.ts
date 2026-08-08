@@ -21,10 +21,18 @@ export const searchUsers = async (req:AuthRequest, res:Response)=>{
 
     const regex = new RegExp(query, "i");
     const users = await User.find({
+        _id: {$ne: req.user!.id},
+        $or:[{name:regex}, {email:regex}, {handle:regex}]
 
-    })
+    }).select("name email handle avatar bio isOnline lastSeen").limit(20);
 
 
     res.json({success:true,users})
+
+}
+
+// get current users profile
+
+export const getProfile = async(req:AuthRequest,  res:Response) =>{
 
 }
