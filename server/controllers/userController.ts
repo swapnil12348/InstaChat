@@ -34,5 +34,10 @@ export const searchUsers = async (req:AuthRequest, res:Response)=>{
 // get current users profile
 
 export const getProfile = async(req:AuthRequest,  res:Response) =>{
-
+    const user = await User.findById(req.user!.id);
+    if (!user) {
+        res.status(404).json({success: false, message: "User not found"})
+        
+    }
+    res.json({success: true, user})
 }
