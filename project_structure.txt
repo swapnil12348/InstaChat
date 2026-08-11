@@ -1,0 +1,100 @@
+﻿└── client/
+│   └── .claude/
+│   │   └── settings.json
+│   └── .expo/
+│   │   └── static-tmp/
+│   │   │   └── _error.js
+│   │   └── types/
+│   │   │   └── router.d.ts
+│   │   └── web/
+│   │   │   └── cache/
+│   │   │   │   └── production/
+│   │   │   │   │   └── images/
+│   │   │   │   │   │   └── favicon/
+│   │   │   │   │   │   │   └── favicon-a4e030697a7571b3e95d31860e4da55d2f98e5e861e2b55e414f45a8556828ba-contain-transparent/
+│   │   │   │   │   │   │   │   └── favicon-48.png
+│   │   └── devices.json
+│   │   └── README.md
+│   └── .vscode/
+│   │   └── extensions.json
+│   │   └── settings.json
+│   └── app/
+│   │   └── (auth)/
+│   │   │   └── index.tsx
+│   │   │   └── _layout.tsx
+│   │   └── (tabs)/
+│   │   │   └── index.tsx
+│   │   │   └── profile.tsx
+│   │   │   └── search.tsx
+│   │   │   └── _layout.tsx
+│   │   └── chat/
+│   │   │   └── [id].tsx
+│   │   └── index.tsx
+│   │   └── _layout.tsx
+│   └── assets/
+│   │   └── images/
+│   │   │   └── android-icon-background.png
+│   │   │   └── android-icon-foreground.png
+│   │   │   └── android-icon-monochrome.png
+│   │   │   └── favicon.png
+│   │   │   └── icon.png
+│   │   │   └── partial-react-logo.png
+│   │   │   └── react-logo.png
+│   │   │   └── react-logo@2x.png
+│   │   │   └── react-logo@3x.png
+│   │   │   └── splash-icon.png
+│   │   └── styles/
+│   │   │   └── AuthScreen.styles.ts
+│   │   │   └── Avatar.styles.ts
+│   │   │   └── Bubble.styles.ts
+│   │   │   └── ChatScreen.styles.ts
+│   │   │   └── Collapsible.styles.ts
+│   │   │   └── ConvoItem.styles.ts
+│   │   │   └── ExploreScreen.styles.ts
+│   │   │   └── MessagesScreen.styles.ts
+│   │   │   └── ModalScreen.styles.ts
+│   │   │   └── ParallaxScrollView.styles.ts
+│   │   │   └── ProfileScreen.styles.ts
+│   │   │   └── SearchScreen.styles.ts
+│   │   │   └── StoriesBar.styles.ts
+│   │   │   └── StoryViewer.styles.ts
+│   │   │   └── ThemedText.styles.ts
+│   │   └── assets.ts
+│   └── components/
+│   │   └── Avatar.tsx
+│   │   └── Bubble.tsx
+│   │   └── ConvoItem.tsx
+│   │   └── StoriesBar.tsx
+│   │   └── StoryViewer.tsx
+│   └── constants/
+│   │   └── Colors.ts
+│   └── types/
+│   │   └── index.ts
+│   └── utils/
+│   │   └── formatTime.ts
+│   └── .gitignore
+│   └── AGENTS.md
+│   └── app.json
+│   └── CLAUDE.md
+│   └── eslint.config.js
+│   └── expo-env.d.ts
+│   └── package-lock.json
+│   └── package.json
+│   └── README.md
+│   └── tsconfig.json
+└── server/
+│   └── config/
+│   │   └── db.ts
+│   └── controllers/
+│   │   └── userController.ts
+│   └── middlewares/
+│   │   └── auth.ts
+│   └── models/
+│   │   └── User.ts
+│   └── routes/
+│   └── .env
+│   └── .gitignore
+│   └── package-lock.json
+│   └── package.json
+│   └── server.ts
+│   └── tsconfig.json

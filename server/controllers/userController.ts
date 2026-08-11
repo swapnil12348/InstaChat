@@ -37,7 +37,14 @@ export const getProfile = async(req:AuthRequest,  res:Response) =>{
     const user = await User.findById(req.user!.id);
     if (!user) {
         res.status(404).json({success: false, message: "User not found"})
-        
     }
     res.json({success: true, user})
+}
+
+
+//update profile (name, bio, handle, avatar)
+export const updateProfile = async (req:AuthRequest, res:Response) => {
+    const {name, bio, handle} = req.body;
+    const file = req.file;
+    
 }
