@@ -80,9 +80,10 @@ export const updateProfile = async (req:AuthRequest, res:Response) => {
         avatarUrl = result.secure_url
         
             
-        } catch (error) {
-            
-            
+        } catch (err) {
+            console.error("Avatar upload error:", err);
+            res.status(500).json({success:false, message: "Avatar upload failed"})
+
         }
         
     }
