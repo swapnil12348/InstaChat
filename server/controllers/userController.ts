@@ -93,5 +93,13 @@ export const updateProfile = async (req:AuthRequest, res:Response) => {
         ...(bio !== undefined && {bio}),
         ...(handle && {handle: handle.toLowerCase().trim()})
     }
+
+    if (avatarUrl) {
+        updateData.avatar = avatarUrl;
+    }
+
+    const updated = await User.findByIdAndUpdate(req.user!.id, updateData, {returnDocument:"after"})
+
+    res.json({success:true, user:updated})
     
 }
