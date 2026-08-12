@@ -46,5 +46,20 @@ export const getProfile = async(req:AuthRequest,  res:Response) =>{
 export const updateProfile = async (req:AuthRequest, res:Response) => {
     const {name, bio, handle} = req.body;
     const file = req.file;
+
+    if (handle) {
+        const handleExists = await User.findOne({handle, _id:{$ne: req.user!.id}})
+        if (handleExists) {
+            res.status(400).json({success:false, message:"Handle Already in use"})
+            return
+    
+        }
+        
+    }
+
+    let avatarUrl = "";
+    if (file) {
+        
+    }
     
 }
