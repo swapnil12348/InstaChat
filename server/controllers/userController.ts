@@ -83,9 +83,15 @@ export const updateProfile = async (req:AuthRequest, res:Response) => {
         } catch (err) {
             console.error("Avatar upload error:", err);
             res.status(500).json({success:false, message: "Avatar upload failed"})
-
+            return
         }
         
+    }
+
+    const updateData :  any = {
+        ...(name && {name}),
+        ...(bio !== undefined && {bio}),
+        ...(handle && {handle: handle.toLowerCase().trim()})
     }
     
 }
