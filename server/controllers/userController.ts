@@ -3,6 +3,9 @@
 import { Response } from "express";
 import { AuthRequest } from "../middlewares/auth";
 import User from "../models/User";
+import { resolve } from "dns";
+import cloudinary from "../config/cloudinary";
+import { Readable } from "stream";
 
 export const getUsers = async(req: AuthRequest, res: Response)=>{
     const users = await User.find({_id:{$ne: req.user!.id}}).select("name email handle avatar bio isOnline lastSeen")
@@ -59,6 +62,28 @@ export const updateProfile = async (req:AuthRequest, res:Response) => {
 
     let avatarUrl = "";
     if (file) {
+
+        try {
+            const uploadPromise = new Promise<{secure_url: string}>((resolve, reject)=>{
+            const uploadStream = cloudinary.uploader.upload_stream({folder:"insta_chat_avatars"},(error,result)=>{
+                if(error) reject(error)
+                else resolve(result as any)
+
+            })
+            const readableStream = new Readable()
+            readableStream.push(file.buffer)
+            readableStream.push(null)
+            readableStream.pipe(uploadStream)
+        })
+
+        const result = await uploadPromise;
+        avatarUrl = result.secure_url
+        
+            
+        } catch (error) {
+            
+            
+        }
         
     }
     
