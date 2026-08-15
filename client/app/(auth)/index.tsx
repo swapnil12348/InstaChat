@@ -1,4 +1,4 @@
-import { View, Text, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,10 +8,14 @@ import { Colors } from '@/constants/Colors';
 import { SvgXml } from 'react-native-svg';
 import { TextInput } from 'react-native-gesture-handler';
 import {Ionicons} from "@expo/vector-icons"
+import { useClerk, useSignIn, useSignUp } from '@clerk/expo';
 
 type Mode = "login" | "register"
 
 export default function AuthScreen() {
+  const {signIn} = useSignIn()
+  const {signUp} = useSignUp()
+  const {setActive}= useClerk()
   const [mode, setMode] = useState<Mode>("login")
   const [name, setName] = useState("")
   const [handle, setHandle] = useState("")
@@ -20,15 +24,64 @@ export default function AuthScreen() {
   const [verificationCode, setVerificationCode] = useState("")
   const [loading, setLoading] = useState(false)
   const [verifying, setVerifying] = useState(false)
+  const [verifyingMode,setVerifyingMode]=useState<"login"| "login_mfa" | "register">("register")
 
   const router = useRouter();
 
   const handleSubmit = async () => {
-    setLoading(true)
-    setTimeout(()=>{
-      setLoading(false)
-      setVerifying(true)
-    },1500)
+  
+    if (!email.trim() || !password.trim()) return Alert.alert("Validation", "Please fill all fields")
+    if(mode === "register" && (!name.trim() || !handle.trim())) return Alert.alert("Validation", "Please fill all fields")
+
+      setLoading(true)
+      try {
+        if (mode === "login") {
+          if (!signIn) {
+            return
+          }
+
+          const result = await signIn.create({
+            identifier: email,
+            password,
+          })
+
+          if (result.error) {
+            throw result.error
+            
+          }
+          if (signIn.status === "complete") {
+            await setActive({session:signIn.createdSessionId})
+            router.replace("/(tabs)")
+          }else if(signIn.status === "needs_first_factor" && signIn.emailCode){
+            await signIn.emailCode.sendCode();
+            setVerifyingMode("login")
+            setVerifying(true)
+
+          }else if(signIn.status === "needs_second_factor" && signIn.mfa){
+            await signIn.mfa.sendEmailCode()
+            setVerifyingMode("login_mfa");
+            setVerifying(true)
+          }
+          
+        }else{
+          if (!signUp) {
+            return
+          }
+
+          const spaceIdx = name.trim().indexOf("");
+          const firstName = spaceIdx !== -1 ? name.trim().substring(0,spaceIdx): name.trim();
+          const lastName =  spaceIdx !== -1 ? name.trim().substring(spaceIdx + 1): "";
+          const result = await signUp.create({
+            emailAddress: email,
+            password,
+            firstName,
+            lastName,
+            username: handle.toLowerCase().replace(/\s/g, ""),
+          })
+        }
+      } catch (error) {
+        
+      }
     
   }
 
