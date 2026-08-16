@@ -9,6 +9,7 @@ import { SvgXml } from 'react-native-svg';
 import { TextInput } from 'react-native-gesture-handler';
 import {Ionicons} from "@expo/vector-icons"
 import { useClerk, useSignIn, useSignUp } from '@clerk/expo';
+import { SignIn } from '@clerk/expo/web';
 
 type Mode = "login" | "register"
 
@@ -78,19 +79,73 @@ export default function AuthScreen() {
             lastName,
             username: handle.toLowerCase().replace(/\s/g, ""),
           })
+          if (result.error) {
+            throw result.error
+          }
+
+          const sendResult = await signUp.verifications.sendEmailCode()
+          if (sendResult.error) {
+            throw sendResult.error
+          }
+          setVerifyingMode("register")
+          setVerifying(true)
         }
-      } catch (error) {
-        
+      } catch (err:any) {
+        Alert.alert("Authentication Error", err?.errors?.[0]?.message || err?.message || "Something went wrong")
+      }finally{
+        setLoading(false)
       }
     
   }
 
   const handleVerify = async () => {
+    if (!verificationCode.trim()) return Alert.alert("Validation", "Please enter the verification code")
+    
     setLoading(true)
-    setTimeout(()=>{
+    try {
+      if (verifyingMode === "register") {
+        if(!signUp) return;
+        const result = await signUp.verifications.verifyEmailCode({
+          code: verificationCode
+        })
+
+        if (result.error) {
+          throw result.error
+        }
+
+        if (signUp.status === "complete") {
+          await setActive({session: signUp.createdSessionId})
+          router.replace("/(tabs)")
+        }else{
+          Alert.alert("Verification failed", "Please check the code and try again")
+        }
+        
+      }else{
+        if(!signIn) return;
+        if (verifyingMode === "login_mfa") {
+          await signIn.mfa.verifyEmailCode({
+            code:verificationCode
+          })
+          }else{
+            await signIn.emailCode.verifyCode({
+              code:verificationCode
+            })
+          }
+          if(signIn.status === "complete"){
+            await setActive({session: signIn.createdSessionId})
+            router.replace("/(tabs)")
+
+          }else{
+            Alert.alert("Verification Failed", "Please check the code and try again")
+          }
+        }
+      }
+     catch (err:any) {
+      Alert.alert("Verification Error", err?.errors?.[0]?.message || err?.message || "Something went wrong")
+      
+    }finally{
       setLoading(false)
-      router.replace("/(tabs)")
-    },1500)
+    }
   }
 
 
