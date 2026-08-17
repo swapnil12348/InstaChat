@@ -3,7 +3,7 @@
 import { Response } from "express";
 import { AuthRequest } from "../middlewares/auth";
 import User from "../models/User";
-import { resolve } from "dns";
+
 import cloudinary from "../config/cloudinary";
 import { Readable } from "stream";
 

@@ -76,6 +76,7 @@ export default function profile() {
       }
 
     } catch (err: any) {
+      console.error("AXIOS ERROR:", err); 
       Alert.alert("Error", err?.response?.data?.message || "Failed to update profile")
       
     }finally{
@@ -165,7 +166,7 @@ export default function profile() {
             </View>
 
             {/* bio */}
-            <View style={styles.fieldLabel}>
+            <View style={styles.field}>
               <Text style={styles.fieldLabel} >BIO</Text>
               <TextInput
               style={[styles.input, styles.bioInput]}
@@ -250,7 +251,7 @@ export default function profile() {
 
         <View style={styles.signOutSection}>
           <TouchableOpacity style={styles.signOutBtn} onPress={handleLogout}>
-            <Ionicons name="log-out-outline" size={18} colors={Colors.error}/>
+            <Ionicons name="log-out-outline" size={18} color={Colors.error}/>
             <Text style={styles.signOutText}>Sign Out</Text>
           </TouchableOpacity>
 

@@ -1,7 +1,7 @@
 import {Router} from "express"
 import { getProfile, getUsers, searchUsers, updateProfile } from "../controllers/userController";
 import upload from "../middlewares/upload";
-import { authMiddleware } from "../middlewares/auth";
+import { authMiddleware } from "../middlewares/auth.js";
 
 const userRouter = Router();
 
