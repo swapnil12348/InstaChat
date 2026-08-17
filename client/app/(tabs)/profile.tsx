@@ -69,13 +69,18 @@ export default function profile() {
       if (data.success) {
         await updateUser(data.user)
         if(data.user.avatar) setSavedAvatar(data.user.avatar)
+          Alert.alert("Success", "Profile updated!")
+        setEditMode(false)
+        setAvatarUri(null)
         
       }
 
-    } catch (error) {
+    } catch (err: any) {
+      Alert.alert("Error", err?.response?.data?.message || "Failed to update profile")
       
+    }finally{
+      setLoading(false)
     }
-
   }
 
   const handleLogout = async ()=>{
