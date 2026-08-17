@@ -24,7 +24,7 @@ export default function profile() {
   const [loading, setLoading]=useState(false)
   const [savedAvatar, setSavedAvatar] = useState<string | null>(user?.avatar || null)
 
-  const displayAvatar = avatarUri || user?.avatar
+  const displayAvatar = avatarUri ||savedAvatar|| user?.avatar
 
   const pickAvatar = async ()=>{
     const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();

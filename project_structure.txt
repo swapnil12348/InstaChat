@@ -29,7 +29,6 @@
 │   │   │   └── _layout.tsx
 │   │   └── chat/
 │   │   │   └── [id].tsx
-│   │   └── index.tsx
 │   │   └── _layout.tsx
 │   └── assets/
 │   │   └── images/
@@ -68,10 +67,14 @@
 │   │   └── StoryViewer.tsx
 │   └── constants/
 │   │   └── Colors.ts
+│   │   └── config.ts
+│   └── context/
+│   │   └── AppContext.tsx
 │   └── types/
 │   │   └── index.ts
 │   └── utils/
 │   │   └── formatTime.ts
+│   └── .env
 │   └── .gitignore
 │   └── AGENTS.md
 │   └── app.json
@@ -84,14 +87,17 @@
 │   └── tsconfig.json
 └── server/
 │   └── config/
+│   │   └── cloudinary.ts
 │   │   └── db.ts
 │   └── controllers/
 │   │   └── userController.ts
 │   └── middlewares/
 │   │   └── auth.ts
+│   │   └── upload.ts
 │   └── models/
 │   │   └── User.ts
 │   └── routes/
+│   │   └── userRoutes.ts
 │   └── .env
 │   └── .gitignore
 │   └── package-lock.json
