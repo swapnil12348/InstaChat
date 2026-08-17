@@ -10,10 +10,11 @@ import { TextInput } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ColorSpace } from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker'
+import { api, useApp } from '@/context/AppContext';
 
 export default function profile() {
 
-  const {auth} = {auth: {user : dummyUserProfile}}
+  const {auth, logout,updateUser} = useApp()
   const user = auth.user;
   const [editMode, setEditMode] = useState(false)
   const [profileName, setProfileName]= useState(auth.user?.name || "")
@@ -21,6 +22,7 @@ export default function profile() {
   const [profileBio, setProfileBio]=useState(auth.user?.bio || "")
   const [avatarUri, setAvatarUri] = useState<string | null>(null)
   const [loading, setLoading]=useState(false)
+  const [savedAvatar, setSavedAvatar] = useState<string | null>(user?.avatar || null)
 
   const displayAvatar = avatarUri || user?.avatar
 
@@ -46,18 +48,40 @@ export default function profile() {
 
   const saveProfile = async ()=>{
     setLoading(true)
-    setTimeout(()=>{
-      setEditMode(false)
-      setAvatarUri(null)
-      setLoading(false)
-    },2000)
+    try {
+      const formData =  new FormData();
+      formData.append('name', profileName);
+      formData.append('handle', profileHandle);
+      formData.append('bio', profileBio);
+
+      if (avatarUri) {
+        formData.append("avatar", {
+          uri: avatarUri,
+          type:"image/jpeg",
+          name:"avatar.jpg"
+        } as any)
+        
+      }
+ 
+      const {data} = await api.put('/api/users/profile', formData, {
+        headers:{"Content-Type": "multipart/form-data"}
+      })
+      if (data.success) {
+        await updateUser(data.user)
+        if(data.user.avatar) setSavedAvatar(data.user.avatar)
+        
+      }
+
+    } catch (error) {
+      
+    }
 
   }
 
   const handleLogout = async ()=>{
     Alert.alert("Sign Out", "Are you sure you wnat to sign out?", [
       {text: "Cancel", style:"cancel"},
-      {text: "Sign Out", style:"destructive", onPress: ()=>{}}
+      {text: "Sign Out", style:"destructive", onPress: logout}
     ])
 
   }
@@ -166,7 +190,10 @@ export default function profile() {
             </TouchableOpacity>
 
             {/* cancel button */}
-            <TouchableOpacity  style={styles.cancelBtn}>
+            <TouchableOpacity  style={styles.cancelBtn} onPress={()=>{
+              setEditMode(false)
+              setAvatarUri(null)
+            }}>
               <Text style={styles.cancelBtnText}>Cancel</Text>
 
 
