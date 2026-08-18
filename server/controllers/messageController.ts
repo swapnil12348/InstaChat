@@ -1,7 +1,10 @@
 
+import { rejects } from "assert";
 import { AuthRequest } from "../middlewares/auth";
 import Conversation from "../models/Conversation";
 import { Response } from "express"
+import cloudinary from "../config/cloudinary";
+import { Readable } from "stream";
 
 // helper : find convoersation between two users
 
@@ -51,7 +54,7 @@ export const getConversations = async (req:AuthRequest, res:Response) => {
 
     const shaped = conversations.map((c)=>{
         const other = (c.participants as any[]).find((p:any)=>String(p._id) !==userId);
-        return {_id: c._id, isGroup: false, participant:other, lastMessage:c.lastMessage, updatedAt:c.updatedAt}
+        return {_id: c._id, isGroup: false, participant:other, lastMessage:c.lastMessage, updatedAt:c.updatedAt }
 
     })
 
@@ -60,7 +63,60 @@ export const getConversations = async (req:AuthRequest, res:Response) => {
 }
 
 //send a Message
-export const sendMessgae = async (req:AuthRequest, res:Response) => {
+export const sendMessage = async (req:AuthRequest, res:Response) => {
+    const senderId = req.user!.id;
+    const {receivedId, conversationId, text} = req.body;
+    const file = req.file;
+
+    if ((!receivedId && !conversationId) || (!text?.trim() && !file)) {
+        res.status(400).json({success:false, message: "receiverId/conversationId and (text or file) are required"});
+        return
+
+    }
+
+    let mediaUrl =""
+    let mediaType: "image" | "video" | undefined;
+    if (file) {
+     try {
+        const resourceType = file.mimetype.startsWith("video") ? "video" : "image";
+        mediaType = resourceType;
+        const uploadPromise = new Promise<{secure_url: string}>((resolve,reject)=>{
+            const uploadStream = cloudinary.uploader.upload_stream({folder:"insta_chat", resource_type:resourceType},(error,result)=>{
+                if(error) reject(error)
+                else resolve(result as any)
+            })
+
+            const readableStream = new Readable()
+            readableStream.push(file.buffer)
+            readableStream.push(null)
+            readableStream.pipe(uploadStream)
+        })
+
+        const result = await uploadPromise;
+        mediaUrl=result.secure_url
+     } catch (err) {
+        console.error("Cloudinary pload error:",err)
+        res.status(500).json({success:false, message:"media upload failed"});
+        return
+        
+     }   
+    }
+
+    let conversation;
+    if(conversationId){
+        conversation=await Conversation.findOne({_id:conversationId, participants:{$in:[senderId]}})
+    }else{
+        conversation = await findConversation(senderId,receivedId)
+        if (!conversation) {
+            conversation = await Conversation.create({
+                participants:[senderId,receivedId]
+            })
+        }
+    }
+
+    if (!conversation) {
+        res.status(400).json({})
+    }
     
 }
 
