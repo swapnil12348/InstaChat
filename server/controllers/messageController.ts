@@ -115,7 +115,7 @@ export const sendMessage = async (req:AuthRequest, res:Response) => {
     }
 
     if (!conversation) {
-        res.status(400).json({})
+        res.status(400).json({success:false,message:"Conversation not found"})
     }
     
 }
