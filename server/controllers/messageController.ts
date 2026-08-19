@@ -5,6 +5,7 @@ import Conversation from "../models/Conversation";
 import { Response } from "express"
 import cloudinary from "../config/cloudinary";
 import { Readable } from "stream";
+import Message from "../models/Message";
 
 // helper : find convoersation between two users
 
@@ -116,11 +117,71 @@ export const sendMessage = async (req:AuthRequest, res:Response) => {
 
     if (!conversation) {
         res.status(400).json({success:false,message:"Conversation not found"})
+        return
     }
+
+    const message = await Message.create({
+        sender:senderId,
+        receiver: receivedId || conversation.participants.find((p)=>String(p)!==senderId),
+        conversationId:conversation._id,
+        text: text?.trim(),
+        mediaUrl: mediaUrl||undefined,
+        mediaType,
+    })
+
+    conversation.lastMessage = message._id as any;
+    conversation.updatedAt = new Date();
+    await conversation.save();
+
+    res.status(201).json({success:true, message})
     
 }
 
 //get all messages in a conversation
 export const getMessages = async(req:AuthRequest, res:Response)=>{
+    const userId = req.user!.id;
+    const {conversationId}=req.body;
 
+    const conversation = await Conversation.findOne({_id:conversationId, participants:{
+        $in:[userId] } })
+        if (!conversation) {
+            res.status(404).json({success:false, message:"conversation not found"})
+        }
+
+        const messages = await Message.find({conversationId}).sort({createdAt:1});
+        await Message.updateMany({conversationId, receiver:userId, read:false}, {read:true})
+
+        res.json({success:true, messages})
+
+}
+
+//delete a conversation
+
+export const deleteConversation = async (req:AuthRequest, res:Response)=>{
+    const userId = req.user!.id;
+    const {conversationId} = req.params;
+
+    try {
+        const conversation = await Conversation.findById(conversationId);
+        if (!conversation) {
+            res.status(404).json({success:false, message:"Conversation not found"})
+            return
+        }
+        //check if user is part of the conversation
+        const isParticipant = conversation.participants.some((p)=>String(p)===userId)
+        if (!isParticipant) {
+            res.status(403).json({success:false, message:"Not authorized to delete this conversation"})
+            return
+        }
+
+        // notify other participants before deleting
+
+        //delete the conversation itself
+        await Conversation.findByIdAndDelete(conversationId)
+        res.json({success:true, meesage:"Chat deleted successfully"})
+
+    } catch (error) {
+        res.status(500).json({success:false, message:"Server error"})
+        
+    }
 }
