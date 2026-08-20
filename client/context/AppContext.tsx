@@ -149,7 +149,9 @@ export function AppProvider({children}:{children:ReactNode}){
         }
 
         let isMounted = true;
-        let ws: WebSocket | null;
+        let ws: WebSocket | null = null;
+
+        const connectWs  = 
     },[])
 
     return(
