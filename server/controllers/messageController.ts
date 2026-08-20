@@ -6,6 +6,7 @@ import { Response } from "express"
 import cloudinary from "../config/cloudinary";
 import { Readable } from "stream";
 import Message from "../models/Message";
+import { handleConversationEvent } from "../socket/socketManager";
 
 // helper : find convoersation between two users
 
@@ -176,8 +177,15 @@ export const deleteConversation = async (req:AuthRequest, res:Response)=>{
 
         // notify other participants before deleting
 
+        await handleConversationEvent(userId, String(conversationId), {type:"chat-deleted", conversationId})
+
+        //delete all messages in the conversation
+        await Message.deleteMany({conversationId})
+
         //delete the conversation itself
         await Conversation.findByIdAndDelete(conversationId)
+
+
         res.json({success:true, meesage:"Chat deleted successfully"})
 
     } catch (error) {

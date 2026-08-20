@@ -1,4 +1,4 @@
-import { AuthState, User } from "@/types";
+import { AuthState, Conversation, Message, User, UserStory } from "@/types";
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
 import axios from 'axios'
 import { API_BASE_URL } from "@/constants/config";
@@ -15,6 +15,22 @@ interface AppContextType{
     updateUser: (user:User)=>Promise<void>;
     users:User[];
     setUsers: React.Dispatch<React.SetStateAction<User[]>>
+
+    userStories: UserStory[];
+    setUserStories:React.Dispatch<React.SetStateAction<UserStory[]>>
+
+    conversations:Conversation[]
+    setConversations:React.Dispatch<React.SetStateAction<Conversation[]>>
+
+    selectedConversation: Conversation | null
+    setSelectedConversation: (c: Conversation | null)=>void;
+
+    messages: Message;
+    setMessages:React.Dispatch<React.SetStateAction<Message[]>>
+
+    fetchStories: () => Promise<void>;
+    typingUsers: Record<string,boolean>
+    sendWsEvent: (data: object)=> void
 }
 
 const AppContext = createContext<AppContextType | null>(null)
@@ -26,6 +42,14 @@ export function AppProvider({children}:{children:ReactNode}){
 
     const {getToken, isLoaded: authLoaded, isSignedIn, signOut} = useAuth()
     const {user:clerkUser, isLoaded: userLoaded} = useUser()
+
+    const [conversations, setConversations] = useState<Conversation[]>([])
+    const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null)
+    const [messages,setMessages]= useState<Message[]>([])
+    const [userStories, setUserStories] = useState<UserStory[]>([])
+
+
+
     const getTokenRef = useRef(getToken)
 
     useEffect(()=>{

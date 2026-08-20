@@ -6,6 +6,8 @@ import User from "../models/User";
 
 import cloudinary from "../config/cloudinary";
 import { Readable } from "stream";
+import { broadcastUserUpdate } from "../socket/socketManager";
+
 
 export const getUsers = async(req: AuthRequest, res: Response)=>{
     const users = await User.find({_id:{$ne: req.user!.id}}).select("name email handle avatar bio isOnline lastSeen")
@@ -99,6 +101,12 @@ export const updateProfile = async (req:AuthRequest, res:Response) => {
     }
 
     const updated = await User.findByIdAndUpdate(req.user!.id, updateData, {returnDocument:"after"})
+
+    if (updated) {
+        broadcastUserUpdate(updated)
+        
+        
+    }
 
     res.json({success:true, user:updated})
     

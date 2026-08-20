@@ -114,7 +114,7 @@ function broadcastOnlineStatus(userId:string, isOnline:boolean){
     })
 }
 
-async function handleConversationEvent(senderId:string, conversationId:string, event:any){
+export async function handleConversationEvent(senderId:string, conversationId:string, event:any){
     try {
         const conversation = await Conversation.findById(conversationId)
         if(!conversation) return
@@ -132,3 +132,16 @@ async function handleConversationEvent(senderId:string, conversationId:string, e
         console.error("Conversation event error", error)
     }
 }
+
+export function broadcastUserUpdate(user:any){
+    const payload = JSON.stringify({type: "user_update",user});
+    onlineUsers.forEach((ws)=>{
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(payload)
+            
+        }
+    })
+
+}
+
+export {onlineUsers}
