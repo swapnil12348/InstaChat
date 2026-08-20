@@ -1,7 +1,7 @@
-import { AuthState, Conversation, Message, User, UserStory } from "@/types";
+import { AuthState, Conversation, Message, User, UserStory, WsEvent } from "@/types";
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
 import axios from 'axios'
-import { API_BASE_URL } from "@/constants/config";
+import { API_BASE_URL, WS_URL } from "@/constants/config";
 import { useAuth, useUser } from "@clerk/expo";
 
 export const api = axios.create({baseURL: API_BASE_URL})
@@ -151,7 +151,46 @@ export function AppProvider({children}:{children:ReactNode}){
         let isMounted = true;
         let ws: WebSocket | null = null;
 
-        const connectWs  = 
+        const connectWs  =  async ()=>{
+            try {
+                const token = await getTokenRef.current();
+                if (! token || !isMounted) return;
+
+                ws = new WebSocket(`${WS_URL}/ws?token=${token}`);
+                wsRef.current = ws;
+
+                ws.onmessage = (e) =>{
+                    const event:WsEvent = JSON.parse(e.data)
+
+                    if (event.type === "message") {
+                        const incoming = event.payload as Message;
+                        setMessages((prev)=>{
+                            if (prev.length >0 && prev[0].conversationId === incoming.conversationId) {
+                                return [...prev, incoming]
+                                
+                            }
+                            return prev;
+                        })
+
+                        setConversations((prev)=>{
+                            const exists = prev.some((c)=>c._id === incoming.conversationId);
+                            if (!exists) {
+                                api.get("/api/messages/conversation").then((data)=>{
+                                    if (data.success) {
+                                        setConversations(data.conversations)
+                                    }
+                                }).catch(console.error)
+                                
+                            }
+
+                        })
+                        
+                    }
+                }
+            } catch (error) {
+                
+            }
+        }
     },[])
 
     return(
