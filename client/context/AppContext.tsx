@@ -47,6 +47,8 @@ export function AppProvider({children}:{children:ReactNode}){
     const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null)
     const [messages,setMessages]= useState<Message[]>([])
     const [userStories, setUserStories] = useState<UserStory[]>([])
+    const [ typingUsers, setTypingUsers] = useState<Record<string,boolean>>({});
+    const wsRef = useRef<WebSocket | null>(null)
 
 
 
@@ -107,13 +109,47 @@ export function AppProvider({children}:{children:ReactNode}){
 
     const logout = useCallback(async ()=>{
         _tokenRef.current=null;
+        wsRef.current?.close();
         await signOut()
         setAuth({token:null, user:null, loading:false})
+        setConversations([])
+        setMessages([])
+        setSelectedConversation(null)
 
     },[signOut])
 
     const updateUser = useCallback(async (user:User) => {
         setAuth((prev)=>({...prev, user}))
+    },[])
+
+    const fetchStories = useCallback(async ()=>{
+        try {
+            const {data} = await api.get("/api/stories");
+            if (data.success) setUserStories(data.stories)
+        } catch (error) {
+            setTimeout(()=>fetchStories(),1000)
+        }
+
+    },[])
+
+    const sendWsEvent = useCallback((data:object)=>{
+        if (wsRef.current?.readyState === WebSocket.OPEN) {
+            wsRef.current.send(JSON.stringify(data))
+            
+        }
+
+    },[])
+
+    //websocket lifecycle secured with dynamic clerk token
+
+    useEffect(()=>{
+        if (!isSignedIn || !authLoaded || !userLoaded) {
+            wsRef.current?.close()
+            return;
+        }
+
+        let isMounted = true;
+        let ws: WebSocket | null;
     },[])
 
     return(
