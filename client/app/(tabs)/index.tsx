@@ -7,10 +7,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { styles } from '@/assets/styles/MessagesScreen.styles';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
-import { TextInput } from 'react-native-gesture-handler';
+import { TextInput } from 'react-native';
 import StoriesBar from '@/components/StoriesBar';
 import StoryViewer from '@/components/StoryViewer';
 import ConvoItem from '@/components/ConvoItem';
+import { api } from '@/context/AppContext';
 
 export default function MessagesScreen() {
 
@@ -23,11 +24,15 @@ export default function MessagesScreen() {
 
   const fetchConversations = () =>{
     setLoading(true)
-    setTimeout(()=>{
-      setConversations(dummyConversationData as any)
+    api.get<{success:boolean; conversations:Conversation[]}>("/api/messages/conversations").then(({data})=>{
+      if (data.success) setConversations(data.conversations);
       setLoading(false)
-    },1000)
-  }
+    }).catch(()=>{
+      setTimeout(fetchConversations,1000)
+    })
+   
+    }
+  
 
   useEffect(()=>{
     fetchConversations()
