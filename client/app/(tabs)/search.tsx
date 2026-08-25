@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import Avatar from '@/components/Avatar';
+import { api } from '@/context/AppContext';
 
 
 export default function search() {
@@ -20,11 +21,16 @@ export default function search() {
 
   const fetchUsers = async () => {
     setLoading(true)
-    setTimeout(()=>{
-      setUsers(dummyUsers)
-      setLoading(false)
-    },1000)
-    
+ try {
+  const endpoint = search ? `/api/users/sewarch?query=${search}`:"/api/users";
+  const {data}= await api.get<{success:Boolean, users: IUser[]}>
+  (endpoint)
+  if(data.success) setUsers(data.users)
+    setLoading(false)
+ } catch (error) {
+  setTimeout(fetchUsers, 1000)
+  
+ }
   }
 
   useEffect(()=>{
