@@ -1,6 +1,6 @@
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, TouchableOpacity, ActivityIndicator, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import type {User as IUser} from '../../types'
+import type {Conversation, User as IUser} from '../../types'
 import { useRouter } from 'expo-router';
 import { dummyUsers } from '@/assets/assets';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import Avatar from '@/components/Avatar';
-import { api } from '@/context/AppContext';
+import { api, useApp } from '@/context/AppContext';
 
 
 export default function search() {
@@ -18,11 +18,12 @@ export default function search() {
   const [users, setUsers]=useState<IUser[]>([])
   const [loading, setLoading]=useState(false)
   const router = useRouter()
+  const {setConversations, setSelectedConversation}= useApp()
 
   const fetchUsers = async () => {
     setLoading(true)
  try {
-  const endpoint = search ? `/api/users/sewarch?query=${search}`:"/api/users";
+  const endpoint = search ? `/api/users/search?query=${search}`:"/api/users";
   const {data}= await api.get<{success:Boolean, users: IUser[]}>
   (endpoint)
   if(data.success) setUsers(data.users)
@@ -39,7 +40,18 @@ export default function search() {
   },[search])
 
   const startChat = async (user:IUser)=>{
-    router.push(`/chat/${user._id}`)
+    try {
+      const { data } = await api.get<{success:Boolean; conversation:Conversation}>(`/api/messages/conversations/with/${user._id}`)
+      if (data.success) {
+        setSelectedConversation(data.conversation)
+        setConversations((prev)=>(prev.some((c)=>c._id === data.conversation._id)? prev : [data.conversation, ...prev]))
+        router.push(`/chat/${data.conversation._id}`)
+        
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to open conversation")
+    }
+    
 
   }
 
