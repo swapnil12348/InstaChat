@@ -25,7 +25,7 @@ interface AppContextType{
     selectedConversation: Conversation | null
     setSelectedConversation: (c: Conversation | null)=>void;
 
-    messages: Message;
+    messages: Message[];
     setMessages:React.Dispatch<React.SetStateAction<Message[]>>
 
     fetchStories: () => Promise<void>;
@@ -175,26 +175,112 @@ export function AppProvider({children}:{children:ReactNode}){
                         setConversations((prev)=>{
                             const exists = prev.some((c)=>c._id === incoming.conversationId);
                             if (!exists) {
-                                api.get("/api/messages/conversation").then((data)=>{
+                                api.get("/api/messages/conversation").then(({data})=>{
                                     if (data.success) {
                                         setConversations(data.conversations)
                                     }
-                                }).catch(console.error)
+                                }).catch(console.error);
+                                return prev;
+
                                 
                             }
+                            return prev.map((c)=> c._id === incoming.conversationId ? {...c, lastMessage: incoming, updatedAt:incoming.createdAt}:c).sort((a,b)=>new Date(b.updatedAt).getTime())
 
                         })
                         
                     }
+
+                    if (event.type === "typing") {
+                        const {senderId, isTyping} = event;
+                        if (senderId && isTyping !==undefined) {
+                            setTypingUsers((prev)=>({...prev,[senderId]:isTyping}))
+                            
+                        }
+                        
+                    }
+
+                    if (event.type === "online_status") {
+                        const{userId, isOnline}=event
+                        if (userId && isOnline !== undefined) {
+                            setUsers((prev)=>prev.map((u)=>(u._id === userId ? {...u,isOnline}:u)));
+                            setConversations((prev)=>prev.map((c)=>{
+                                if (c.participant?._id === userId) {
+                                    return{...c,participant:{...c.participant, isOnline}}
+                                    
+                                    
+                                }
+                                return c;
+                            }))
+                            
+                        }
+                        
+                    }
+
+                    if (event.type===  "user_update") {
+                        const updated = event.user as User
+                        if (updated) {
+                            setUsers((prev)=>prev.map((u)=>(u._id === updated._id ? updated:u)))
+                            setConversations((prev)=>
+                                prev.map((c)=>(c.participant?._id === updated._id ? {...c, participant:updated} :c))
+                            );
+                            setSelectedConversation((prev)=>{
+                                if (prev && prev.participant?._id === updated._id) {
+                                    return {...prev, participant:updated}
+                                    
+                                }
+                                return prev
+                            })
+                            setUserStories((prev)=>prev.map((us)=>(us.user._id === updated._id ? {...us, user: updated}:us)))
+                        }
+                        
+                    }
+
+                    if (event.type === "chat_deleted") {
+                        const {conversationId} = event;
+                        if (conversationId) {
+                            setConversations((prev)=>prev.filter((c)=>c._id === conversationId ? null :prev))
+                            
+                        }
+                        
+                    }
                 }
-            } catch (error) {
+                ws.onerror = ()=>ws?.close()
+
+            } catch (err) {
+                console.error("WS connect error:", err)
                 
             }
         }
-    },[])
+
+        connectWs()
+
+        return ()=>{
+            isMounted = false;
+            ws?.close()
+        }
+    },[isSignedIn, authLoaded, userLoaded])
 
     return(
-        <AppContext.Provider value={{auth,logout,updateUser,users, setUsers}}>
+        <AppContext.Provider value={{
+        auth,
+        logout,
+        updateUser,
+        users, 
+        setUsers,
+        conversations,
+        setConversations,
+        selectedConversation,
+        setSelectedConversation,
+        messages,
+        setMessages,
+        userStories,
+        setUserStories,
+        fetchStories,
+        typingUsers,
+        sendWsEvent
+
+        
+        }}>
             {children}
         </AppContext.Provider>
     )
