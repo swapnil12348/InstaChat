@@ -90,14 +90,23 @@
 │   │   └── cloudinary.ts
 │   │   └── db.ts
 │   └── controllers/
+│   │   └── messageController.ts
+│   │   └── storyController.ts
 │   │   └── userController.ts
 │   └── middlewares/
 │   │   └── auth.ts
 │   │   └── upload.ts
 │   └── models/
+│   │   └── Conversation.ts
+│   │   └── Message.ts
+│   │   └── Story.ts
 │   │   └── User.ts
 │   └── routes/
+│   │   └── messageRoutes.ts
+│   │   └── storyRoutes.ts
 │   │   └── userRoutes.ts
+│   └── socket/
+│   │   └── socketManager.ts
 │   └── .env
 │   └── .gitignore
 │   └── package-lock.json

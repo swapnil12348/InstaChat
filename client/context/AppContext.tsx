@@ -127,6 +127,7 @@ export function AppProvider({children}:{children:ReactNode}){
             const {data} = await api.get("/api/stories");
             if (data.success) setUserStories(data.stories)
         } catch (error) {
+    console.error("🚨 Failed to fetch stories:", error);
             setTimeout(()=>fetchStories(),1000)
         }
 

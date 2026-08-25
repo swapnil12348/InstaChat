@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native'
+import { View, Text, TouchableOpacity, ActivityIndicator, FlatList, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Conversation, UserStory } from '@/types';
 import { useRouter } from 'expo-router';
@@ -25,9 +25,17 @@ export default function MessagesScreen() {
   const fetchConversations = () =>{
     setLoading(true)
     api.get<{success:boolean; conversations:Conversation[]}>("/api/messages/conversations").then(({data})=>{
-      if (data.success) setConversations(data.conversations);
+      if (data.success) {
+        setConversations(data.conversations);
+      }else{
+        throw new Error("Backend returned success: false"); 
+      }
       setLoading(false)
-    }).catch(()=>{
+    }).catch((error)=>{
+      console.error("🔥 CRITICAL API ERROR:", error);
+    
+    // Pop up a massive alert on the screen so you know it broke
+    Alert.alert("App Error", "Failed to load conversations: " + error.message);
       setTimeout(fetchConversations,1000)
     })
    
