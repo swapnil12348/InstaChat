@@ -2,7 +2,6 @@ import { View, Text, TouchableOpacity, ActivityIndicator, FlatList, Alert } from
 import React, { useEffect, useState } from 'react'
 import { Conversation, UserStory } from '@/types';
 import { useRouter } from 'expo-router';
-import { dummyConversationData } from '@/assets/assets';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { styles } from '@/assets/styles/MessagesScreen.styles';
 import { Ionicons } from '@expo/vector-icons';
